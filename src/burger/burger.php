@@ -42,6 +42,7 @@ function getOrderByEmail($email)
 function placeOrder()
 {
     $orders = getOrders();
+    $counter = count($orders);
     $postOrder = getPostOrder();
     $foundOrderId = getOrderByEmail($postOrder['email']);
 
@@ -50,11 +51,10 @@ function placeOrder()
             $orders[$foundOrderId]['order']++;
             orderMessage($orders[$foundOrderId]);
         } else {
-            var_dump('error?');
             $postOrder['order'] = 1;
-            $postOrder['id'] = count($orders) + 1;
+            $postOrder['id'] = $counter + 1;
             $orders[] = $postOrder;
-            orderMessage($orders[count($orders) - 1]);
+            orderMessage($orders[$counter]);
         }
 
         return file_put_contents(ORDERS, json_encode($orders, JSON_PRETTY_PRINT));
