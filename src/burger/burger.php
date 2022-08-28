@@ -48,13 +48,15 @@ function placeOrder()
     if ($orders) {
         if (is_int($foundOrderId)) {
             $orders[$foundOrderId]['order']++;
+            orderMessage($orders[$foundOrderId]);
         } else {
+            var_dump('error?');
             $postOrder['order'] = 1;
             $postOrder['id'] = count($orders) + 1;
             $orders[] = $postOrder;
+            orderMessage($orders[count($orders) - 1]);
         }
 
-        orderMessage($orders[$foundOrderId]);
         return file_put_contents(ORDERS, json_encode($orders, JSON_PRETTY_PRINT));
     }
 
