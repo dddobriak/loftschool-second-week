@@ -15,6 +15,7 @@ $users = [
     'Trevor Virtue',
 ];
 
-$savedUsers = saveUsersToJson(generateUsers($users, 50));
+saveUserListToJsonFile(generateUserList($users, 50));
 
-var_dump(getUserStats());
+var_dump(countUserNameValues());
+var_dump(countAverageUserAge());
