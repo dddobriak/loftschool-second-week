@@ -1,4 +1,5 @@
 <?php
+
 const ORDERS = 'orders.json';
 
 $serverUri = explode('/', $_SERVER['REQUEST_URI']);
@@ -28,21 +29,19 @@ function getOrders()
 
 function getOrderByEmail($email)
 {
-    $orders = getOrders();
-
-    foreach ($orders as $index => $order) {
-        if ($email === $order['email']) {
-            return $index;
-        }
+    if (!getOrders()) {
+        return false;
     }
 
-    return false;
+    $shortUseraData = array_column(getOrders(), 'email');
+
+    return array_search($email, $shortUseraData);
 }
 
 function placeOrder()
 {
     $orders = getOrders();
-    $counter = count($orders);
+    $counter = !$orders ?: count($orders);
     $postOrder = getPostOrder();
     $foundOrderId = getOrderByEmail($postOrder['email']);
 
@@ -64,6 +63,7 @@ function placeOrder()
     $postOrder['id'] = 1;
 
     orderMessage($postOrder);
+
     return file_put_contents(ORDERS, json_encode([$postOrder], JSON_PRETTY_PRINT));
 }
 
