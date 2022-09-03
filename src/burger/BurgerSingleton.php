@@ -1,11 +1,12 @@
- <?php
+<?php
+
 use PDO;
 
 class BurgerSingleton
 {
     private static $instance = null;
-    const USER = '###';
-    const PASS = '###';
+    private const USER = 'pavel_mysql';
+    private const PASS = 'password';
     private $dbh;
 
     private function __construct()
@@ -21,7 +22,7 @@ class BurgerSingleton
     public static function getInstance()
     {
         if (self::$instance === null) {
-            self::$instance = new self;
+            self::$instance = new static();
         }
 
         return self::$instance;

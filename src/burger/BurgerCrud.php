@@ -1,9 +1,7 @@
- <?php
+<?php
 
- require_once 'BurgerSingleton.php';
-
- class BurgerCrud
- {
+class BurgerCrud
+{
     private $instance;
 
     public function __construct()
@@ -12,21 +10,16 @@
     }
 
     public function create($order)
-    {        
+    {
         $prepare = $this->instance
             ->dbh()
             ->prepare("
-                insert into orders (`order`, `name`, `email`, `phone`, `street`)
-                values (:order,:name,:email,:phone,:street)
-            ");
+            insert into orders (`order`, `name`, `email`, `phone`, `street`)
+            values (:order,:name,:email,:phone,:street)
+        ");
 
-        $prepare->execute([
-            'order' => 1,
-            'name' => $order['name'],
-            'email' => $order['email'],
-            'phone' => $order['phone'],
-            'street' => $order['street'],
-        ]);
+        $order['order'] = 1;
+        $prepare->execute($order);
 
         return $this->read($order['email']);
     }
@@ -59,4 +52,21 @@
 
         return $prepare->execute([$id]);
     }
- }
+
+    public function createTableIfNotExists()
+    {
+        return $this->instance
+            ->dbh()
+            ->query(
+                "CREATE TABLE `orders` (
+                    `id` bigint(20) NOT NULL AUTO_INCREMENT,
+                    `order` bigint(20) NOT NULL,
+                    `name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+                    `email` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+                    `phone` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+                    `street` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+                    PRIMARY KEY (`id`)
+                  ) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;"
+            );
+    }
+}
